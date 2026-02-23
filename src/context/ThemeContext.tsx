@@ -1,7 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { ThemeContextType, ThemeMode, ThemeColor, GameCartridge, SpriteStyle } from '../types';
-import { pokemonGames } from '../lib/data/games';
+import { ThemeContextType, ThemeMode, ThemeColor, GameCartridge, SpriteStyle, pokemonGames } from '../types';
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 

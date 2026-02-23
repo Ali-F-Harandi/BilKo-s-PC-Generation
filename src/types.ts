@@ -8,6 +8,13 @@ export interface GameCartridge {
   textColor: string;
 }
 
+export const pokemonGames: GameCartridge[] = [
+  // Gen 1 Only
+  { id: 'red', name: 'RED', generation: 1, color: '#FF3B3B', accentColor: '#FFcccc', textColor: '#000' },
+  { id: 'blue', name: 'BLUE', generation: 1, color: '#3B4CCA', accentColor: '#ccccFF', textColor: '#000' },
+  { id: 'yellow', name: 'YELLOW', generation: 1, color: '#FFD733', accentColor: '#FFFFE0', textColor: '#000' },
+];
+
 export type ThemeMode = 'light' | 'dark';
 export type ThemeColor = 'default' | 'blue' | 'green'; // For future theming extensibility
 export type SpriteStyle = 'normal' | 'artwork' | 'game';

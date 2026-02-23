@@ -10,7 +10,7 @@ import { EditorDashboard, DashboardTab } from './components/editor/EditorDashboa
 import { LoadSaveModal } from './components/editor/LoadSaveModal';
 import { ParsedSave, GameVersion } from './lib/parser/types';
 import { useTheme } from './context/ThemeContext';
-import { pokemonGames } from './lib/data/games';
+import { pokemonGames } from './types';
 import { Plus, X, Save as SaveIcon, AlertTriangle, Trash2, AlertCircle, Move, MousePointer2 } from 'lucide-react';
 import { writeGen1Save } from './lib/writer/gen1';
 import { detectAndParseSave } from './lib/parser';
