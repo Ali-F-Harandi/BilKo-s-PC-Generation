@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { PokemonStats, Generation, GameVersion } from '../../../lib/parser/types';
-import { useTheme } from '../../../context/ThemeContext';
+import { useTheme } from '../../../context/AppThemeContext';
 import { X, Save, Download, Book } from 'lucide-react';
 import { deriveBaseStats, recalculateStats } from '../../../lib/utils/statCalculator';
 import { getGrowthRate, getLevelFromExp as calculateLevel, getExpAtLevel as calculateMinExp } from '../../../lib/utils/experience';

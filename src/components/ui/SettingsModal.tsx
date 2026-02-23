@@ -2,7 +2,7 @@
 import React from 'react';
 import { X, Settings as SettingsIcon, Image, Monitor, Palette } from 'lucide-react';
 import { useSettings, SpriteStyle } from '../../context/SettingsContext';
-import { useTheme } from '../../context/ThemeContext';
+import { useTheme } from '../../context/AppThemeContext';
 
 interface SettingsModalProps {
     isOpen: boolean;

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { ParsedSave, HallOfFameTeam } from '../../lib/parser/types';
-import { useTheme } from '../../context/ThemeContext';
+import { useTheme } from '../../context/AppThemeContext';
 import { Trophy, Crown, Star, Calendar } from 'lucide-react';
 import { TYPE_COLORS } from '../../lib/data/gameData';
 import { useSettings } from '../../context/SettingsContext';

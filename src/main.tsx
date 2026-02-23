@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import { ThemeProvider } from './context/ThemeContext';
+import { ThemeProvider } from './context/AppThemeContext';
 import { SettingsProvider } from './context/SettingsContext';
 import './index.css';
 

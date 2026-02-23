@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useRef, memo } from 'react';
 import { PokemonStats } from '../../lib/parser/types';
-import { useTheme } from '../../context/ThemeContext';
+import { useTheme } from '../../context/AppThemeContext';
 import { useSettings } from '../../context/SettingsContext';
 import { getPokemonSpriteUrl } from '../../lib/utils/sprites';
 import { Grid, ChevronLeft, ChevronRight, Monitor, List, ChevronDown, CheckCircle2, Box, MousePointer2, Move, Shuffle, Power, Download } from 'lucide-react';
