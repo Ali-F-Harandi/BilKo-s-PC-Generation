@@ -1,4 +1,10 @@
 
+/**
+ * @file App.tsx
+ * @description Main application component for BilKo's PC Save Editor.
+ * Manages the global state for save files, tabs, file processing queue, and global move operations.
+ */
+
 import React, { useState, useEffect } from 'react';
 import { Header } from './components/layout/Header';
 import { Footer } from './components/layout/Footer';
@@ -10,7 +16,7 @@ import { EditorDashboard, DashboardTab } from './components/editor/EditorDashboa
 import { LoadSaveModal } from './components/editor/LoadSaveModal';
 import { ParsedSave, GameVersion } from './lib/parser/types';
 import { useTheme } from './context/ThemeContext';
-import { pokemonGames } from './types';
+import { pokemonGames } from './data/games';
 import { Plus, X, Save as SaveIcon, AlertTriangle, Trash2, AlertCircle, Move, MousePointer2 } from 'lucide-react';
 import { writeGen1Save } from './lib/writer/gen1';
 import { detectAndParseSave } from './lib/parser';
@@ -18,32 +24,45 @@ import { ExportModal } from './components/editor/ExportModal';
 import { MoveLocation, transferPokemonBatch, movePokemonBatch, isSameLocation } from './lib/utils/manipulation';
 import { SortScope, SortCriteria, SortDirection, sortPCBoxes } from './lib/utils/sortManager';
 
+/**
+ * Represents an open save file tab in the editor.
+ */
 interface SaveTab {
+    /** Unique identifier for the tab session */
     id: string;
+    /** Original filename of the loaded save */
     filename: string;
+    /** The parsed save data object */
     data: ParsedSave;
+    /** The detected or selected game version */
     version: GameVersion;
+    /** Whether the save has unsaved changes */
     isDirty: boolean;
-    currentView: DashboardTab; // Added: Independent view state per tab
+    /** Current active view within the dashboard for this specific tab */
+    currentView: DashboardTab;
 }
 
-// Extended Selection Type to track Source Save
+/**
+ * Tracks the source location of a Pokemon being moved across tabs or within a save.
+ */
 interface GlobalMoveSource {
+    /** The ID of the tab where the Pokemon originated */
     tabId: string;
+    /** The specific location (party/box) within that tab */
     location: MoveLocation;
 }
 
 const App: React.FC = () => {
-  // --- State ---
+  // --- State: Tabs & Navigation ---
   const [tabs, setTabs] = useState<SaveTab[]>([]);
   const [activeTabId, setActiveTabId] = useState<string | null>(null);
   
-  // File Queue Management
+  // --- State: File Processing Queue ---
   const [fileQueue, setFileQueue] = useState<File[]>([]);
   const [isProcessingQueue, setIsProcessingQueue] = useState(false);
   const [pendingSaveData, setPendingSaveData] = useState<ParsedSave | null>(null); 
   
-  // Modals
+  // --- State: UI Modals ---
   const [isLoadModalOpen, setIsLoadModalOpen] = useState(false);
   const [tabToClose, setTabToClose] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -51,7 +70,7 @@ const App: React.FC = () => {
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [exportingTabId, setExportingTabId] = useState<string | null>(null);
 
-  // --- GLOBAL MOVE MODE STATE ---
+  // --- State: Global Move Mode ---
   const [isMoveMode, setIsMoveMode] = useState(false);
   const [selectedMoveLocations, setSelectedMoveLocations] = useState<GlobalMoveSource[]>([]);
   const [toastMessage, setToastMessage] = useState<string | null>(null);

@@ -1,33 +1,44 @@
 
+/**
+ * Represents a Pokemon game cartridge with its visual properties for the UI.
+ */
 export interface GameCartridge {
+  /** Unique identifier for the game (e.g., 'red', 'blue', 'yellow') */
   id: string;
+  /** Display name of the game */
   name: string;
+  /** Pokemon generation (1-5) */
   generation: number;
+  /** Primary color of the cartridge */
   color: string;
-  accentColor: string; // Used for stickers/details
+  /** Accent color for UI details and stickers */
+  accentColor: string;
+  /** Text color that contrasts well with the primary color */
   textColor: string;
 }
 
-export const pokemonGames: GameCartridge[] = [
-  // Gen 1 Only
-  { id: 'red', name: 'RED', generation: 1, color: '#FF3B3B', accentColor: '#FFcccc', textColor: '#000' },
-  { id: 'blue', name: 'BLUE', generation: 1, color: '#3B4CCA', accentColor: '#ccccFF', textColor: '#000' },
-  { id: 'yellow', name: 'YELLOW', generation: 1, color: '#FFD733', accentColor: '#FFFFE0', textColor: '#000' },
-];
-
+/** Supported theme modes */
 export type ThemeMode = 'light' | 'dark';
-export type ThemeColor = 'default' | 'blue' | 'green'; // For future theming extensibility
-export type SpriteStyle = 'normal' | 'artwork' | 'game';
 
+/** Theme color variations for future extensibility */
+export type ThemeColor = 'default' | 'blue' | 'green';
+
+/**
+ * Context type for managing application-wide theme and game-specific styling.
+ */
 export interface ThemeContextType {
+  /** Current UI mode (light or dark) */
   mode: ThemeMode;
+  /** Toggles between light and dark modes */
   toggleMode: () => void;
+  /** Current theme variation */
   theme: ThemeColor;
+  /** Sets the theme variation */
   setTheme: (theme: ThemeColor) => void;
+  /** The ID of the currently active game (determines UI colors) */
   activeGameId: string | null;
+  /** Sets the active game ID */
   setActiveGameId: (id: string | null) => void;
+  /** Helper to get the full cartridge configuration for the active game */
   getGameTheme: () => GameCartridge | undefined;
-  spriteStyle: SpriteStyle;
-  setSpriteStyle: (style: SpriteStyle) => void;
-  getSpriteUrl: (dexId: number) => string;
 }

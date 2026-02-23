@@ -5,6 +5,7 @@ import { useTheme } from '../../context/ThemeContext';
 import { Backpack, Monitor, Trash2, Plus, ArrowDownAZ, Hash, Disc } from 'lucide-react';
 import { Autocomplete } from '../ui/Autocomplete';
 import { getItemName } from '../../lib/data/items';
+import { getItemSpriteUrl } from '../../lib/utils/sprites';
 
 interface InventoryProps {
     items: Item[]; // Bag (Limit 20)
@@ -194,30 +195,7 @@ export const Inventory: React.FC<InventoryProps> = ({ items, pcItems, isMoveMode
     };
 
     const getSpriteUrl = (itemName: string, id: number) => {
-        // TMs/HMs fallback
-        if (itemName.startsWith('TM') || itemName.startsWith('HM')) return null;
-        
-        // Manual overrides for PokeAPI item names
-        const overrides: Record<string, string> = {
-            "Thunderstone": "thunder-stone",
-            "Parlyz Heal": "paralyze-heal",
-            "Elixer": "elixir",
-            "Max Elixer": "max-elixir",
-            "X Defend": "x-defense",
-            "X Special": "x-sp-atk",
-            "Itemfinder": "dowsing-machine",
-            "Exp. All": "exp-share",
-            "Teru-sama": "teru-sama",
-            "?????": "unknown"
-        };
-
-        if (overrides[itemName]) {
-            return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${overrides[itemName]}.png`;
-        }
-        
-        // Clean name for PokeAPI
-        const slug = itemName.toLowerCase().replace(/é/g, 'e').replace(/ /g, '-').replace(/\./g, '').replace(/'/g, '');
-        return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${slug}.png`;
+        return getItemSpriteUrl(itemName);
     };
 
     return (

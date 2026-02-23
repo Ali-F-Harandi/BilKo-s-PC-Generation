@@ -1,4 +1,10 @@
 
+/**
+ * @file index.ts
+ * @description Core parsing logic for Pokemon Generation 1 save files (.sav).
+ * Handles detection, validation, and extraction of trainer data, party, PC boxes, and more.
+ */
+
 import { ParsedSave, ParserResult, PokemonStats, Item, HallOfFameTeam, HallOfFamePokemon, GameVersion, GameOptions } from './types';
 import { decodeText } from '../utils/textDecoder';
 import { 
@@ -20,12 +26,6 @@ import { calculateGen1Stat } from '../utils/statCalculator';
 
 // --- Gen 1 Parsing Logic (Consolidated) ---
 
-/**
- * Parses the Pokedex flags (seen/owned) from the save file.
- * @param data The raw save file data.
- * @param start The starting offset for the flags.
- * @returns An array of booleans indicating the flag status for each Pokemon (1-151).
- */
 function getPokedexFlags(data: Uint8Array, start: number): boolean[] {
   const flags: boolean[] = [];
   flags.push(false); 
@@ -44,12 +44,6 @@ function getPokedexFlags(data: Uint8Array, start: number): boolean[] {
   return flags;
 }
 
-/**
- * Parses the event flags (missable objects) from the save file.
- * @param data The raw save file data.
- * @param start The starting offset for the event flags.
- * @returns An array of booleans indicating the status of each event flag.
- */
 function getEventFlags(data: Uint8Array, start: number): boolean[] {
     const flags: boolean[] = [];
     // Gen 1 Missable Objects array is 32 bytes (256 bits)
@@ -62,13 +56,6 @@ function getEventFlags(data: Uint8Array, start: number): boolean[] {
     return flags;
 }
 
-/**
- * Parses a list of items (bag or PC) from the save file.
- * @param view The raw save file data.
- * @param startOffset The starting offset for the item list.
- * @param maxCapacity The maximum number of items the list can hold.
- * @returns An array of parsed Item objects.
- */
 function parseItems(view: Uint8Array, startOffset: number, maxCapacity: number = 20): Item[] {
   const count = view[startOffset];
   const items: Item[] = [];
@@ -91,17 +78,6 @@ function parseItems(view: Uint8Array, startOffset: number, maxCapacity: number =
   return items;
 }
 
-/**
- * Parses a single Pokemon's data structure from the save file.
- * @param view The raw save file data.
- * @param offset The starting offset for the Pokemon's data structure.
- * @param isParty Whether the Pokemon is in the party (true) or in a PC box (false). Party Pokemon have extra stat data.
- * @param nickname The decoded nickname of the Pokemon.
- * @param otName The decoded Original Trainer name.
- * @param nicknameRaw The raw byte array of the nickname.
- * @param otNameRaw The raw byte array of the OT name.
- * @returns A fully parsed PokemonStats object containing all the Pokemon's data.
- */
 function parsePokemonStruct(
   view: Uint8Array, 
   offset: number, 
@@ -511,12 +487,19 @@ export function parsePk1(buffer: Uint8Array): PokemonStats | null {
 
 // --- Main Parser Entry ---
 
+/**
+ * Detects the game version and parses the entire save file.
+ * @param file The raw save file from the user.
+ * @returns A promise resolving to the parsing result.
+ */
 export const detectAndParseSave = async (file: File): Promise<ParserResult> => {
   try {
     const arrayBuffer = await file.arrayBuffer();
     const view = new Uint8Array(arrayBuffer);
     const size = view.length;
     const filename = file.name;
+
+    console.log(`[Parser] Analyzing: ${filename} (${size} bytes)`);
 
     // --- GEN 1 Only (32KB) ---
     // Strict size check for Gen 1 (32768 bytes, sometimes with 16 byte header)

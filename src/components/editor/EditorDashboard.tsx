@@ -43,13 +43,6 @@ interface EditorDashboardProps {
     onTabChange: (tab: DashboardTab) => void;
 }
 
-/**
- * EditorDashboard is the main container for the save file editing interface.
- * It manages the state of the currently active tab (Home, Storage, Pokedex, etc.)
- * and coordinates data updates between the various sub-components and the main App state.
- * 
- * @param props The component props including the parsed save data and event handlers.
- */
 export const EditorDashboard: React.FC<EditorDashboardProps> = ({ 
     data: initialData, 
     onSaveUpdate, 
@@ -252,6 +245,7 @@ export const EditorDashboard: React.FC<EditorDashboardProps> = ({
                 <PokemonEditorModal 
                     pokemon={selectedPokemon.mon} 
                     generation={data.generation} 
+                    version={data.gameVersion}
                     onClose={handleCloseEditor} 
                     onSave={handleSavePokemon}
                 />
@@ -320,7 +314,7 @@ export const EditorDashboard: React.FC<EditorDashboardProps> = ({
                     )}
 
                     {activeTab === 'storage' && (
-                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
                             {/* PC Storage (Right on Desktop, Top on Mobile) */}
                             <div className="lg:col-span-9 h-auto lg:order-2">
                                 <PCStorage 
@@ -342,7 +336,7 @@ export const EditorDashboard: React.FC<EditorDashboardProps> = ({
                             </div>
 
                             {/* Inventory (Left on Desktop, Bottom on Mobile) */}
-                            <div className="lg:col-span-3 h-[500px] lg:h-full overflow-hidden lg:order-1">
+                            <div className="lg:col-span-3 h-[500px] lg:h-0 lg:min-h-full overflow-hidden lg:order-1">
                                 <Inventory 
                                     items={data.items} 
                                     pcItems={data.pcItems}

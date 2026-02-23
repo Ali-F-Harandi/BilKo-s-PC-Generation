@@ -1,4 +1,10 @@
 
+/**
+ * @file gen1.ts
+ * @description Logic for writing modified save data back to a Generation 1 binary format.
+ * Handles checksum calculation and bank-switching logic for PC storage.
+ */
+
 import { ParsedSave, PokemonStats, Item } from '../parser/types';
 import { GEN1_OFFSETS, GEN1_INTERNAL_TO_DEX } from '../data/offsets';
 import { BinaryWriter } from '../utils/io';
@@ -9,11 +15,7 @@ GEN1_INTERNAL_TO_DEX.forEach((dex, internal) => {
     if (dex !== 0) DEX_TO_INTERNAL[dex] = internal;
 });
 
-/**
- * Writes the Pokedex flags (seen/owned) to the binary writer.
- * @param writer The BinaryWriter instance.
- * @param flags The array of boolean flags representing Pokedex entries.
- */
+// Helper: Write Pokedex Flags
 function writePokedexFlags(writer: BinaryWriter, flags: boolean[]) {
     // Gen 1 uses 19 bytes (152 bits)
     for (let i = 0; i < 19; i++) {
@@ -28,11 +30,7 @@ function writePokedexFlags(writer: BinaryWriter, flags: boolean[]) {
     }
 }
 
-/**
- * Writes the event flags (missable objects) to the binary writer.
- * @param writer The BinaryWriter instance.
- * @param flags The array of boolean flags representing events.
- */
+// Helper: Write Event Flags
 function writeEventFlags(writer: BinaryWriter, flags: boolean[]) {
     for (let i = 0; i < 32; i++) { // 32 bytes
         let byte = 0;
@@ -46,12 +44,7 @@ function writeEventFlags(writer: BinaryWriter, flags: boolean[]) {
     }
 }
 
-/**
- * Writes a list of items to the binary writer.
- * @param writer The BinaryWriter instance.
- * @param items The array of Item objects to write.
- * @param maxCapacity The maximum number of items allowed in this list.
- */
+// Helper: Write Items
 function writeItems(writer: BinaryWriter, items: Item[], maxCapacity: number) {
     writer.u8(items.length); // Item Count
     
@@ -62,12 +55,7 @@ function writeItems(writer: BinaryWriter, items: Item[], maxCapacity: number) {
     writer.u8(0xFF); // Terminator
 }
 
-/**
- * Writes a single Pokemon's data structure to the binary writer.
- * @param writer The BinaryWriter instance.
- * @param mon The PokemonStats object containing the data to write.
- * @param isParty Whether the Pokemon is in the party (true) or in a PC box (false). Party Pokemon have extra stat data.
- */
+// Helper: Write Pokemon Structure
 function writePokemonStruct(writer: BinaryWriter, mon: PokemonStats, isParty: boolean) {
     const startPos = writer.tell();
     
@@ -129,11 +117,7 @@ function writePokemonStruct(writer: BinaryWriter, mon: PokemonStats, isParty: bo
     }
 }
 
-/**
- * Writes a full PC Box of Pokemon to the binary writer.
- * @param writer The BinaryWriter instance.
- * @param boxPokemon The array of PokemonStats objects representing the Pokemon in the box.
- */
+// Helper: Write a full Box
 function writeBox(writer: BinaryWriter, boxPokemon: PokemonStats[]) {
     // 1. Count
     writer.u8(boxPokemon.length);
@@ -214,6 +198,11 @@ export function createPk1Binary(mon: PokemonStats): Uint8Array {
     return writer.getBuffer();
 }
 
+/**
+ * Reconstructs a full Generation 1 save file from a ParsedSave object.
+ * @param save The modified save data.
+ * @returns The final 32KB binary buffer.
+ */
 export function writeGen1Save(save: ParsedSave): Uint8Array {
     // Clone raw data
     const writer = new BinaryWriter(new Uint8Array(save.rawData));

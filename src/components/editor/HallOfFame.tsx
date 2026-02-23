@@ -4,13 +4,16 @@ import { ParsedSave, HallOfFameTeam } from '../../lib/parser/types';
 import { useTheme } from '../../context/ThemeContext';
 import { Trophy, Crown, Star, Calendar } from 'lucide-react';
 import { TYPE_COLORS } from '../../lib/data/gameData';
+import { useSettings } from '../../context/SettingsContext';
+import { getPokemonSpriteUrl } from '../../lib/utils/sprites';
 
 interface HallOfFameProps {
     data: ParsedSave;
 }
 
 export const HallOfFame: React.FC<HallOfFameProps> = ({ data }) => {
-    const { getGameTheme, getSpriteUrl } = useTheme();
+    const { getGameTheme } = useTheme();
+    const { spriteStyle } = useSettings();
     const theme = getGameTheme();
     const teams = data.hallOfFame || [];
 
@@ -64,7 +67,7 @@ export const HallOfFame: React.FC<HallOfFameProps> = ({ data }) => {
                                         </div>
                                         
                                         <img 
-                                            src={getSpriteUrl(mon.dexId)} 
+                                            src={getPokemonSpriteUrl(mon.dexId, spriteStyle, data.gameVersion)} 
                                             alt={mon.speciesName}
                                             className="w-3/4 h-3/4 object-contain pixelated"
                                             loading="lazy"

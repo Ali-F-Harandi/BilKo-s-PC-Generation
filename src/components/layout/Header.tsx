@@ -39,7 +39,10 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, hasActiveSave }) => 
         className={`sticky top-0 z-50 w-full shadow-md transition-colors duration-500 ${!theme ? 'bg-red-600 dark:bg-red-900 text-white' : ''} ${textColor}`}
         style={headerStyle}
       >
-        <div className="max-w-[100rem] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        {/* Dark Mode Overlay for Game Themes */}
+        {theme && <div className="absolute inset-0 bg-black/0 dark:bg-black/20 transition-colors duration-500 pointer-events-none" />}
+        
+        <div className="relative z-10 max-w-[100rem] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           {/* Logo Area */}
           <div className="flex items-center space-x-3 select-none">
             <div className={`bg-white rounded-full p-1 border-4 ${borderColor}`}>
@@ -67,6 +70,15 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, hasActiveSave }) => 
               aria-label="Toggle Theme"
             >
               {mode === 'light' ? <Moon size={24} /> : <Sun size={24} />}
+            </button>
+
+            {/* Settings Button */}
+            <button 
+              onClick={() => setIsSettingsOpen(true)}
+              className={`p-2 rounded-full ${hoverBg} transition-colors`}
+              aria-label="Open Settings"
+            >
+              <Settings size={24} />
             </button>
 
             <button 
@@ -136,18 +148,15 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, hasActiveSave }) => 
                   </div>
               )}
 
-              {/* Section: Settings */}
+              {/* Section: Configuration */}
               <div>
-                <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 px-2">Settings</h4>
+                <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 px-2">Configuration</h4>
                 <div className="space-y-1">
                   <button 
-                    onClick={() => {
-                      setIsSettingsOpen(true);
-                      setIsMenuOpen(false);
-                    }}
+                    onClick={() => { setIsSettingsOpen(true); setIsMenuOpen(false); }}
                     className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors text-gray-700 dark:text-gray-200 font-bold text-sm text-left"
                   >
-                    <Settings size={18} className="text-blue-500" /> App Settings
+                    <Settings size={18} className="text-gray-500" /> App Settings
                   </button>
                 </div>
               </div>
@@ -204,10 +213,10 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, hasActiveSave }) => 
           </div>
         </div>
       )}
-      {/* Settings Modal */}
-      {isSettingsOpen && (
-        <SettingsModal onClose={() => setIsSettingsOpen(false)} />
-      )}
+      <SettingsModal 
+        isOpen={isSettingsOpen} 
+        onClose={() => setIsSettingsOpen(false)} 
+      />
     </>
   );
 };

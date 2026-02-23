@@ -4,6 +4,8 @@ import { EVENT_DISTRIBUTIONS, EventPokemonData } from '../../lib/data/eventDistr
 import { parsePk1 } from '../../lib/parser/index';
 import { ParsedSave, PokemonStats } from '../../lib/parser/types';
 import { useTheme } from '../../context/ThemeContext';
+import { useSettings } from '../../context/SettingsContext';
+import { getPokemonSpriteUrl } from '../../lib/utils/sprites';
 import { Search, Gift, Database, Tag, ExternalLink, User, Plus, Box } from 'lucide-react';
 import { TypeBadge } from '../ui/PokemonBadges';
 import { getPokemonTypes } from '../../lib/data/pokemonTypes';
@@ -15,7 +17,8 @@ interface EncounterDatabaseProps {
 }
 
 export const EncounterDatabase: React.FC<EncounterDatabaseProps> = ({ data, onAddPokemon, onToast }) => {
-    const { getGameTheme, getSpriteUrl } = useTheme();
+    const { getGameTheme } = useTheme();
+    const { spriteStyle } = useSettings();
     const theme = getGameTheme();
     
     const [search, setSearch] = useState('');
@@ -99,7 +102,7 @@ export const EncounterDatabase: React.FC<EncounterDatabaseProps> = ({ data, onAd
                         </div>
                     ) : filteredEvents.map((evt) => {
                         const types = getPokemonTypes(evt.previewDexId);
-                        const spriteUrl = getSpriteUrl(evt.previewDexId);
+                        const spriteUrl = getPokemonSpriteUrl(evt.previewDexId, spriteStyle, data.gameVersion);
 
                         return (
                             <div key={evt.id} className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 shadow-sm hover:shadow-lg transition-all flex flex-col gap-4 text-left group hover:-translate-y-1 duration-300">

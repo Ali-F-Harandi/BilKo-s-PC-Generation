@@ -2,15 +2,19 @@
 import React, { useState, useEffect, useRef, memo } from 'react';
 import { PokemonStats } from '../../lib/parser/types';
 import { useTheme } from '../../context/ThemeContext';
+import { useSettings } from '../../context/SettingsContext';
+import { getPokemonSpriteUrl } from '../../lib/utils/sprites';
 import { Grid, ChevronLeft, ChevronRight, Monitor, List, ChevronDown, CheckCircle2, Box, MousePointer2, Move, Shuffle, Power, Download } from 'lucide-react';
 import { TypeBadge, StatusBadge } from '../ui/PokemonBadges';
 import { MoveLocation } from '../../lib/utils/manipulation';
 import { useSlotLogic } from '../../lib/hooks/useSlotLogic';
 import { parsePk1 } from '../../lib/parser/index';
+import { GameVersion } from '../../lib/parser/types';
 
 interface PCStorageProps {
     boxes: PokemonStats[][];
     currentBoxIndex: number;
+    gameVersion?: GameVersion;
     isMoveMode?: boolean;
     onEnableMoveMode?: () => void;
     onToggleMoveMode?: () => void;
@@ -36,16 +40,17 @@ const BoxSlot = memo<{
     isMoveMode?: boolean;
     isSelected: boolean;
     viewMode: ViewMode;
+    gameVersion?: GameVersion;
     onPokemonClick?: (mon: PokemonStats, index: number, boxIndex: number, e: React.MouseEvent) => void;
     onEmptySlotClick?: (index: number, boxIndex: number, e: React.MouseEvent) => void;
     onToggleSelection?: (index: number, boxIndex: number) => void;
     onDropPokemon?: (index: number, boxIndex: number, e: React.DragEvent) => void;
     onEnableMoveMode?: () => void;
 }>(({ 
-    mon, slotIndex, viewedBoxIndex, isMoveMode, isSelected, viewMode,
+    mon, slotIndex, viewedBoxIndex, isMoveMode, isSelected, viewMode, gameVersion,
     onPokemonClick, onEmptySlotClick, onToggleSelection, onDropPokemon, onEnableMoveMode 
 }) => {
-    const { getSpriteUrl } = useTheme();
+    const { spriteStyle } = useSettings();
     
     // Use DRY hook
     const { 
@@ -97,7 +102,7 @@ const BoxSlot = memo<{
                     <>
                         <div className="w-24 h-24 flex items-center justify-center shrink-0 -ml-2">
                             <img 
-                                src={getSpriteUrl(mon.dexId)}
+                                src={getPokemonSpriteUrl(mon.dexId, spriteStyle, gameVersion)}
                                 alt={mon.speciesName}
                                 className="w-20 h-20 object-contain pixelated drop-shadow-md transition-transform group-hover:scale-110"
                             />
@@ -185,7 +190,7 @@ const BoxSlot = memo<{
 
                     {/* Sprite */}
                     <img 
-                        src={getSpriteUrl(mon.dexId)} 
+                        src={getPokemonSpriteUrl(mon.dexId, spriteStyle, gameVersion)} 
                         alt={mon.speciesName}
                         className={`w-24 h-24 object-contain pixelated transition-transform -my-2 ${!isMoveMode && 'group-hover:scale-110'}`}
                         loading="lazy"
@@ -227,7 +232,7 @@ const BoxSlot = memo<{
 });
 
 export const PCStorage: React.FC<PCStorageProps> = ({ 
-    boxes, currentBoxIndex, isMoveMode, onEnableMoveMode, onToggleMoveMode, selectedMoveSources = [], 
+    boxes, currentBoxIndex, gameVersion, isMoveMode, onEnableMoveMode, onToggleMoveMode, selectedMoveSources = [], 
     onPokemonClick, onEmptySlotClick, onToggleSelection, onDropPokemon, onSortClick, onSetActiveBox, onImport, onToast
 }) => {
     const { getGameTheme } = useTheme();
@@ -523,6 +528,7 @@ export const PCStorage: React.FC<PCStorageProps> = ({
                                 isMoveMode={isMoveMode}
                                 isSelected={isSlotSelected(slotIndex)}
                                 viewMode="grid"
+                                gameVersion={gameVersion}
                                 onPokemonClick={onPokemonClick}
                                 onEmptySlotClick={onEmptySlotClick}
                                 onToggleSelection={onToggleSelection}
@@ -543,6 +549,7 @@ export const PCStorage: React.FC<PCStorageProps> = ({
                                 isMoveMode={isMoveMode}
                                 isSelected={isSlotSelected(slotIndex)}
                                 viewMode="list"
+                                gameVersion={gameVersion}
                                 onPokemonClick={onPokemonClick}
                                 onEmptySlotClick={onEmptySlotClick}
                                 onToggleSelection={onToggleSelection}

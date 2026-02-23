@@ -1,13 +1,15 @@
 
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { GameVersion } from '../../lib/parser/types';
 import { POKEMON_NAMES } from '../../lib/data/pokemonNames';
 import { getPokemonTypes } from '../../lib/data/pokemonTypes';
 import { POKEDEX_ENTRIES } from '../../lib/data/pokedexEntries';
 import { POKEMON_LOCATIONS } from '../../lib/data/pokemonLocations';
+import { useSettings } from '../../context/SettingsContext';
+import { getPokemonSpriteUrl } from '../../lib/utils/sprites';
 import { Check, Eye, Ban, X, MapPin, AlignLeft } from 'lucide-react';
 import { TypeBadge } from './PokemonBadges';
-import { useTheme } from '../../context/ThemeContext';
 
 interface PokemonDetailViewProps {
     id: number;
@@ -19,7 +21,7 @@ interface PokemonDetailViewProps {
 }
 
 export const PokemonDetailView: React.FC<PokemonDetailViewProps> = ({ id, owned, seen, version, onClose, onToggleStatus }) => {
-    const { getSpriteUrl } = useTheme();
+    const { spriteStyle } = useSettings();
     const name = POKEMON_NAMES[id];
     const types = getPokemonTypes(id);
     const entryData = POKEDEX_ENTRIES[id];
@@ -38,11 +40,11 @@ export const PokemonDetailView: React.FC<PokemonDetailViewProps> = ({ id, owned,
         else if (version === 'Blue') locationText = locationData.blue;
         else locationText = locationData.red;
     }
+    
+    const spriteUrl = getPokemonSpriteUrl(id, spriteStyle, version);
 
-    const spriteUrl = getSpriteUrl(id);
-
-    return (
-        <div className="fixed inset-0 z-[300] bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200" onClick={(e) => e.stopPropagation()}>
+    return createPortal(
+        <div className="fixed inset-0 z-[2500] bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200" onClick={(e) => e.stopPropagation()}>
             <div className="w-full max-w-4xl h-[600px] bg-white dark:bg-gray-900 rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700 flex flex-col md:flex-row overflow-hidden relative">
                 
                 {/* Left Column: Visuals */}
@@ -127,6 +129,7 @@ export const PokemonDetailView: React.FC<PokemonDetailViewProps> = ({ id, owned,
                     </div>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };

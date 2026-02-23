@@ -2,6 +2,8 @@
 import React, { memo } from 'react';
 import { PokemonStats, Generation, GameVersion } from '../../lib/parser/types';
 import { useTheme } from '../../context/ThemeContext';
+import { useSettings } from '../../context/SettingsContext';
+import { getPokemonSpriteUrl } from '../../lib/utils/sprites';
 import { Heart, Ban, MousePointer2 } from 'lucide-react';
 import { TypeBadge, StatusBadge } from '../ui/PokemonBadges';
 import { MoveLocation } from '../../lib/utils/manipulation';
@@ -26,12 +28,13 @@ const PokemonSlot = memo<{
     index: number; 
     isSelected?: boolean;
     isMoveMode?: boolean;
+    gameVersion?: GameVersion;
     onEnableMoveMode?: () => void;
     onClick: (mon: PokemonStats, index: number, boxIndex: number | undefined, e: React.MouseEvent) => void;
     onToggleSelection?: (index: number) => void;
     onDropPokemon?: (index: number, boxIndex: number | undefined, e: React.DragEvent) => void;
-}>(({ mon, index, isSelected, isMoveMode, onEnableMoveMode, onClick, onToggleSelection, onDropPokemon }) => {
-    const { getSpriteUrl } = useTheme();
+}>(({ mon, index, isSelected, isMoveMode, gameVersion, onEnableMoveMode, onClick, onToggleSelection, onDropPokemon }) => {
+    const { spriteStyle } = useSettings();
     
     // Use the DRY hook
     const { 
@@ -47,7 +50,7 @@ const PokemonSlot = memo<{
     if (hpPercent < 50) hpColor = 'bg-yellow-500';
     if (hpPercent < 20) hpColor = 'bg-red-500';
 
-    const spriteUrl = getSpriteUrl(mon.dexId);
+    const spriteUrl = getPokemonSpriteUrl(mon.dexId, spriteStyle, gameVersion);
 
     return (
         <div 
@@ -155,7 +158,7 @@ const PokemonSlot = memo<{
 });
 
 export const PartyList: React.FC<PartyListProps> = ({ 
-    party, isMoveMode, onEnableMoveMode, selectedMoveSources = [], 
+    party, gameVersion, isMoveMode, onEnableMoveMode, selectedMoveSources = [], 
     onPokemonClick, onEmptySlotClick, onToggleSelection, onDropPokemon
 }) => {
     const { getGameTheme } = useTheme();
@@ -197,6 +200,7 @@ export const PartyList: React.FC<PartyListProps> = ({
                             index={idx} 
                             isSelected={isSlotSelected(idx)}
                             isMoveMode={isMoveMode}
+                            gameVersion={gameVersion}
                             onEnableMoveMode={onEnableMoveMode}
                             onClick={(m, i, b, e) => onPokemonClick && onPokemonClick(m, i, e)}
                             onToggleSelection={(i) => onToggleSelection && onToggleSelection(i)}
