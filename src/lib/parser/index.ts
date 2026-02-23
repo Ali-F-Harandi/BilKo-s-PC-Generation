@@ -518,8 +518,6 @@ export const detectAndParseSave = async (file: File): Promise<ParserResult> => {
     const size = view.length;
     const filename = file.name;
 
-    console.log(`[Parser] Analyzing: ${filename} (${size} bytes)`);
-
     // --- GEN 1 Only (32KB) ---
     // Strict size check for Gen 1 (32768 bytes, sometimes with 16 byte header)
     if (size === 32768 || size === 32768 + 16) {
