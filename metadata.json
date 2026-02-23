@@ -1,0 +1,5 @@
+{
+  "name": "BilKo's PC: Generation 1 Save Editor",
+  "description": "A web-based Pokemon save editor interface supporting Gen 1-5 with a modular, themable architecture.",
+  "requestFramePermissions": []
+}
