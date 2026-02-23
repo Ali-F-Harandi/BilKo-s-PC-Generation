@@ -1,7 +1,7 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
 import { ParsedSave, GameVersion } from '../../lib/parser/types';
-import { useTheme } from '../../context/AppThemeContext';
+import { useTheme } from '../../context/ThemeContext';
 import { POKEMON_NAMES } from '../../lib/data/pokemonNames';
 import { useSettings } from '../../context/SettingsContext';
 import { getPokemonSpriteUrl } from '../../lib/utils/sprites';

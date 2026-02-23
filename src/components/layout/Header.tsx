@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { useTheme } from '../../context/AppThemeContext';
+import { useTheme } from '../../context/ThemeContext';
 import { Menu, Moon, Sun, X, Github, Bug, BookOpen, Monitor, Home, LayoutGrid, Book, Trophy, Map, Database, Settings } from 'lucide-react';
 import { DashboardTab } from '../editor/EditorDashboard';
 import { SettingsModal } from '../ui/SettingsModal';

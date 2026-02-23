@@ -3,7 +3,7 @@ import React, { useState, useMemo } from 'react';
 import { EVENT_DISTRIBUTIONS, EventPokemonData } from '../../lib/data/eventDistributions';
 import { parsePk1 } from '../../lib/parser/index';
 import { ParsedSave, PokemonStats } from '../../lib/parser/types';
-import { useTheme } from '../../context/AppThemeContext';
+import { useTheme } from '../../context/ThemeContext';
 import { useSettings } from '../../context/SettingsContext';
 import { getPokemonSpriteUrl } from '../../lib/utils/sprites';
 import { Search, Gift, Database, Tag, ExternalLink, User, Plus, Box } from 'lucide-react';

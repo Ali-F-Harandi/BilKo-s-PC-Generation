@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { TYPE_COLORS } from '../../lib/data/gameData';
-import { useTheme } from '../../context/AppThemeContext';
+import { useTheme } from '../../context/ThemeContext';
 import { Swords, Shield } from 'lucide-react';
 import { TypeBadge } from '../ui/PokemonBadges';
 

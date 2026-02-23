@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Search, Move, Save } from 'lucide-react';
-import { useTheme } from '../../context/AppThemeContext';
+import { useTheme } from '../../context/ThemeContext';
 
 interface EditorToolsProps {
     onExport: () => void; 

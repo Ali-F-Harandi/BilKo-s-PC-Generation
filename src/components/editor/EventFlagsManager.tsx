@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { GEN1_EVENTS, GameEvent } from '../../lib/data/events';
 import { ParsedSave } from '../../lib/parser/types';
-import { useTheme } from '../../context/AppThemeContext';
+import { useTheme } from '../../context/ThemeContext';
 import { MapPin, Gift, Zap } from 'lucide-react';
 
 interface EventFlagsManagerProps {

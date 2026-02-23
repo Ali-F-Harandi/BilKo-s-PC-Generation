@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Item } from '../../lib/parser/types';
-import { useTheme } from '../../context/AppThemeContext';
+import { useTheme } from '../../context/ThemeContext';
 import { Backpack, Monitor, Trash2, Plus, ArrowDownAZ, Hash, Disc } from 'lucide-react';
 import { Autocomplete } from '../ui/Autocomplete';
 import { getItemName } from '../../lib/data/items';
