@@ -24,6 +24,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Debug - List files
+        run: |
+          echo "Listing src directory:"
+          ls -R src
+          echo "Listing src/context directory:"
+          ls -la src/context
+          echo "Content of src/main.tsx:"
+          cat src/main.tsx
+
       - name: Build
         run: npm run build
 
