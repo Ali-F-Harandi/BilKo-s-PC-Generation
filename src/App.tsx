@@ -15,7 +15,7 @@ import { GameVersionSelector } from './components/home/GameVersionSelector';
 import { EditorDashboard, DashboardTab } from './components/editor/EditorDashboard';
 import { LoadSaveModal } from './components/editor/LoadSaveModal';
 import { ParsedSave, GameVersion } from './lib/parser/types';
-import { useTheme } from './context/ThemeContext';
+import { useTheme } from './context/AppThemeContext';
 import { pokemonGames } from './data/games';
 import { Plus, X, Save as SaveIcon, AlertTriangle, Trash2, AlertCircle, Move, MousePointer2 } from 'lucide-react';
 import { writeGen1Save } from './lib/writer/gen1';

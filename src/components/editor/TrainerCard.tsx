@@ -1,7 +1,7 @@
 
 import React, { useMemo, useState } from 'react';
 import { ParsedSave, TrainerInfo } from '../../lib/parser/types';
-import { useTheme } from '../../context/ThemeContext';
+import { useTheme } from '../../context/AppThemeContext';
 import { Clock, Book, User, Heart, Coins, Trophy, Save, X, Swords } from 'lucide-react';
 import { REGION_BADGES } from '../../lib/data/gameData';
 
