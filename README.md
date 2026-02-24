@@ -1,36 +1,20 @@
-# BilKo's PC: Generation 1 Save Editor
+<div align="center">
+<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+</div>
 
-A modular, web-based Pokemon save editor interface supporting Generation 1 (.sav) files.
+# Run and deploy your AI Studio app
 
-## Project Structure
+This contains everything you need to run your app locally.
 
-- `src/App.tsx`: Main application entry point and state manager.
-- `src/main.tsx`: Vite entry point.
-- `src/components/`: Reusable UI components.
-  - `editor/`: Components specific to the save editor dashboard.
-  - `home/`: Components for the landing page and file loading.
-  - `layout/`: Global layout components like Header and Footer.
-  - `ui/`: Generic UI primitives (buttons, cards, etc.).
-- `src/context/`: React Context providers (Theme, etc.).
-- `src/data/`: Static data like Pokemon names, move lists, and game offsets.
-- `src/lib/`: Core logic.
-  - `parser/`: Logic for reading binary save files.
-  - `writer/`: Logic for writing modified data back to binary.
-  - `utils/`: Helper functions for manipulation, sorting, and byte handling.
-- `src/types.ts`: Shared TypeScript interfaces and types.
-- `src/index.css`: Global styles using Tailwind CSS.
+View your app in AI Studio: https://ai.studio/apps/bd5450c8-cd2c-42b7-a553-ee1328eac480
 
-## Features
+## Run Locally
 
-- **Multi-Tab Support**: Load and edit multiple save files simultaneously.
-- **Global Move Mode**: Move Pokemon between different save files or reorder them within a save.
-- **Living Dex Generator**: Automatically sort and organize Pokemon across all open saves into a Living Dex.
-- **Themed UI**: The interface adapts its colors based on the detected game version (Red, Blue, Yellow).
-- **Comprehensive Editor**: Edit Trainer info, Party, PC Boxes, Pokedex, Inventory, and Event Flags.
+**Prerequisites:**  Node.js
 
-## Technical Details
 
-- **Framework**: React 18 with TypeScript.
-- **Styling**: Tailwind CSS v4.
-- **Icons**: Lucide React.
-- **Build Tool**: Vite.
+1. Install dependencies:
+   `npm install`
+2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
+3. Run the app:
+   `npm run dev`
