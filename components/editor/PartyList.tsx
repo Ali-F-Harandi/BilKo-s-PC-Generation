@@ -6,6 +6,7 @@ import { Heart, Ban, MousePointer2 } from 'lucide-react';
 import { TypeBadge, StatusBadge } from '../ui/PokemonBadges';
 import { MoveLocation } from '../../lib/utils/manipulation';
 import { useSlotLogic } from '../../lib/hooks/useSlotLogic';
+import { getPokemonSpriteUrl } from '../../lib/utils/sprites';
 
 interface PartyListProps {
     party: PokemonStats[];
@@ -31,6 +32,7 @@ const PokemonSlot = memo<{
     onToggleSelection?: (index: number) => void;
     onDropPokemon?: (index: number, boxIndex: number | undefined, e: React.DragEvent) => void;
 }>(({ mon, index, isSelected, isMoveMode, onEnableMoveMode, onClick, onToggleSelection, onDropPokemon }) => {
+    const { spriteStyle, activeGameId } = useTheme();
     
     // Use the DRY hook
     const { 
@@ -46,7 +48,7 @@ const PokemonSlot = memo<{
     if (hpPercent < 50) hpColor = 'bg-yellow-500';
     if (hpPercent < 20) hpColor = 'bg-red-500';
 
-    const spriteUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${mon.dexId}.png`;
+    const spriteUrl = getPokemonSpriteUrl(mon.dexId, spriteStyle, activeGameId || 'red');
 
     return (
         <div 
@@ -104,7 +106,7 @@ const PokemonSlot = memo<{
                     <img 
                         src={spriteUrl} 
                         alt={mon.speciesName}
-                        className="w-full h-full object-contain pixelated"
+                        className={`w-full h-full object-contain ${spriteStyle === 'pixel' ? 'pixelated' : ''}`}
                         draggable={false}
                         onError={(e) => { (e.target as HTMLImageElement).src = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png' }}
                     />

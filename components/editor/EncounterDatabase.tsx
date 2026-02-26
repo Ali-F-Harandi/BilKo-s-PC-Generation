@@ -7,6 +7,7 @@ import { useTheme } from '../../context/ThemeContext';
 import { Search, Gift, Database, Tag, ExternalLink, User, Plus, Box } from 'lucide-react';
 import { TypeBadge } from '../ui/PokemonBadges';
 import { getPokemonTypes } from '../../lib/data/pokemonTypes';
+import { getPokemonSpriteUrl } from '../../lib/utils/sprites';
 
 interface EncounterDatabaseProps {
     data: ParsedSave;
@@ -15,7 +16,7 @@ interface EncounterDatabaseProps {
 }
 
 export const EncounterDatabase: React.FC<EncounterDatabaseProps> = ({ data, onAddPokemon, onToast }) => {
-    const { getGameTheme } = useTheme();
+    const { getGameTheme, activeGameId, spriteStyle } = useTheme();
     const theme = getGameTheme();
     
     const [search, setSearch] = useState('');
@@ -99,7 +100,7 @@ export const EncounterDatabase: React.FC<EncounterDatabaseProps> = ({ data, onAd
                         </div>
                     ) : filteredEvents.map((evt) => {
                         const types = getPokemonTypes(evt.previewDexId);
-                        const spriteUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${evt.previewDexId}.png`;
+                        const spriteUrl = getPokemonSpriteUrl(evt.previewDexId, spriteStyle, activeGameId || 'red');
 
                         return (
                             <div key={evt.id} className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 shadow-sm hover:shadow-lg transition-all flex flex-col gap-4 text-left group hover:-translate-y-1 duration-300">
@@ -110,7 +111,7 @@ export const EncounterDatabase: React.FC<EncounterDatabaseProps> = ({ data, onAd
                                         <img 
                                             src={spriteUrl} 
                                             alt={evt.title}
-                                            className="w-32 h-32 object-contain transition-transform group-hover:scale-110 drop-shadow-md"
+                                            className={`w-32 h-32 object-contain transition-transform group-hover:scale-110 drop-shadow-md ${spriteStyle === 'pixel' ? 'pixelated' : ''}`}
                                         />
                                     </div>
 
