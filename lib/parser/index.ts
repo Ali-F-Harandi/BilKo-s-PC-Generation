@@ -1,4 +1,10 @@
 
+/**
+ * @file index.ts
+ * @description Core parsing logic for Pokemon Generation 1 save files (.sav).
+ * Handles detection, validation, and extraction of trainer data, party, PC boxes, and more.
+ */
+
 import { ParsedSave, ParserResult, PokemonStats, Item, HallOfFameTeam, HallOfFamePokemon, GameVersion, GameOptions } from './types';
 import { decodeText } from '../utils/textDecoder';
 import { 
@@ -481,6 +487,11 @@ export function parsePk1(buffer: Uint8Array): PokemonStats | null {
 
 // --- Main Parser Entry ---
 
+/**
+ * Detects the game version and parses the entire save file.
+ * @param file The raw save file from the user.
+ * @returns A promise resolving to the parsing result.
+ */
 export const detectAndParseSave = async (file: File): Promise<ParserResult> => {
   try {
     const arrayBuffer = await file.arrayBuffer();
