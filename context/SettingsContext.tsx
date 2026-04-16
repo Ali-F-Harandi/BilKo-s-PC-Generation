@@ -1,7 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-
-export type SpriteStyle = 'normal' | 'artwork' | 'game';
+import { SpriteStyle } from '../types';
 
 interface SettingsContextType {
     spriteStyle: SpriteStyle;
@@ -14,9 +13,9 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
     const [spriteStyle, setSpriteStyle] = useState<SpriteStyle>(() => {
         if (typeof window !== 'undefined') {
             const saved = localStorage.getItem('spriteStyle');
-            return (saved as SpriteStyle) || 'game';
+            return (saved as SpriteStyle) || 'pixel';
         }
-        return 'game';
+        return 'pixel';
     });
 
     useEffect(() => {

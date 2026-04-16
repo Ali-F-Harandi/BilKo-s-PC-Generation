@@ -175,7 +175,7 @@ export const PokemonStatsView: React.FC<PokemonStatsProps> = ({ mon, updateIV, u
                                     type="number" 
                                     value={row.iv}
                                     onChange={(e) => updateIV(row.ivKey as any, Number(e.target.value))}
-                                    className="w-10 text-center text-xs font-mono bg-gray-100 dark:bg-gray-900 rounded py-1 border border-transparent focus:border-blue-500 focus:bg-white transition-all outline-none"
+                                    className="w-10 text-center text-xs font-mono bg-gray-100 dark:bg-gray-900 dark:text-white rounded py-1 border border-transparent focus:border-blue-500 focus:bg-white dark:focus:bg-gray-800 transition-all outline-none"
                                 />
                             </div>
                             <div className="flex justify-center">
@@ -183,7 +183,7 @@ export const PokemonStatsView: React.FC<PokemonStatsProps> = ({ mon, updateIV, u
                                     type="number" 
                                     value={row.ev}
                                     onChange={(e) => updateEV(row.evKey as any, Number(e.target.value))}
-                                    className="w-14 text-center text-xs font-mono bg-gray-100 dark:bg-gray-900 rounded py-1 border border-transparent focus:border-blue-500 focus:bg-white transition-all outline-none"
+                                    className="w-14 text-center text-xs font-mono bg-gray-100 dark:bg-gray-900 dark:text-white rounded py-1 border border-transparent focus:border-blue-500 focus:bg-white dark:focus:bg-gray-800 transition-all outline-none"
                                 />
                             </div>
                         </div>

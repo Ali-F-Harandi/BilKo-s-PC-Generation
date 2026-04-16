@@ -1,9 +1,9 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { SpriteStyle, ThemeContextType } from '../types';
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [theme, setTheme] = useState<'light' | 'dark'>('light');
     const [activeGameId, setActiveGameId] = useState<string | null>(null);
     const [spriteStyle, setSpriteStyle] = useState<SpriteStyle>('pixel');
@@ -65,3 +65,15 @@ export const useTheme = () => {
     }
     return context;
 };
+
+// Re-export useSettings for backward compatibility - it now uses the same context
+export const useSettings = () => {
+    const context = useContext(ThemeContext);
+    if (context === undefined) {
+        throw new Error('useSettings must be used within a ThemeProvider');
+    }
+    return { spriteStyle: context.spriteStyle, setSpriteStyle: context.setSpriteStyle };
+};
+
+// Re-export SettingsProvider for backward compatibility
+export const SettingsProvider: React.FC<{ children: ReactNode }> = ThemeProvider;

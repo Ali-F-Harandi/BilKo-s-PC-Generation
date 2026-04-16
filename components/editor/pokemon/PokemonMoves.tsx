@@ -67,7 +67,7 @@ export const PokemonMovesView: React.FC<PokemonMovesProps> = ({ mon, updateMove,
                                                     newPps[i] = clamp(Number(e.target.value), 0, maxPP);
                                                     updateField('movePp', newPps);
                                                 }}
-                                                className="w-8 bg-transparent text-center text-xs font-mono py-0.5 outline-none"
+                                                className="w-8 bg-transparent text-center text-xs font-mono py-0.5 outline-none dark:text-white"
                                             />
                                             <span className="text-[10px] text-gray-400 font-mono select-none">/ {maxPP}</span>
                                         </div>

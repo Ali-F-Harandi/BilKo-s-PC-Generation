@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { PokemonStats, Generation } from '../../../lib/parser/types';
+import { createPortal } from 'react-dom';
+import { PokemonStats, Generation, GameVersion } from '../../../lib/parser/types';
 import { useTheme } from '../../../context/ThemeContext';
 import { X, Save, Download, Book } from 'lucide-react';
 import { deriveBaseStats, recalculateStats } from '../../../lib/utils/statCalculator';
@@ -19,11 +20,12 @@ import { PokemonDetailView } from '../../ui/PokemonDetailView';
 interface PokemonEditorModalProps {
     pokemon: PokemonStats;
     generation: Generation;
+    version?: GameVersion;
     onClose: () => void;
     onSave: (mon: PokemonStats) => void;
 }
 
-export const PokemonEditorModal: React.FC<PokemonEditorModalProps> = ({ pokemon: initialData, generation, onClose, onSave }) => {
+export const PokemonEditorModal: React.FC<PokemonEditorModalProps> = ({ pokemon: initialData, generation, version, onClose, onSave }) => {
     const { getGameTheme } = useTheme();
     const theme = getGameTheme();
     const [mon, setMon] = useState<PokemonStats>(initialData);
@@ -170,8 +172,8 @@ export const PokemonEditorModal: React.FC<PokemonEditorModalProps> = ({ pokemon:
         }
     };
 
-    return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+    return createPortal(
+        <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
             {showDexEntry && (
                 <PokemonDetailView 
                     id={mon.dexId}
@@ -263,6 +265,7 @@ export const PokemonEditorModal: React.FC<PokemonEditorModalProps> = ({ pokemon:
                             <PokemonIdentityView 
                                 mon={mon}
                                 types={types}
+                                version={version}
                                 updateField={updateField}
                                 handleSpeciesChange={handleSpeciesChange}
                                 handleExpChange={handleExpChange}
@@ -291,6 +294,7 @@ export const PokemonEditorModal: React.FC<PokemonEditorModalProps> = ({ pokemon:
                     </div>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };

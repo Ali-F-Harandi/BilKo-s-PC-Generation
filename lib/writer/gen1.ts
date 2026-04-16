@@ -1,12 +1,18 @@
 
+/**
+ * @file gen1.ts
+ * @description Logic for writing modified save data back to a Generation 1 binary format.
+ * Handles checksum calculation and bank-switching logic for PC storage.
+ */
+
 import { ParsedSave, PokemonStats, Item } from '../parser/types';
 import { GEN1_OFFSETS, GEN1_INTERNAL_TO_DEX } from '../data/offsets';
 import { BinaryWriter } from '../utils/io';
 
 // Reverse map: National Dex ID -> Internal ID
 const DEX_TO_INTERNAL: Record<number, number> = {};
-GEN1_INTERNAL_TO_DEX.forEach((dex, internal) => {
-    if (dex !== 0) DEX_TO_INTERNAL[dex] = internal;
+Object.entries(GEN1_INTERNAL_TO_DEX).forEach(([internal, dex]) => {
+    if (dex !== 0) DEX_TO_INTERNAL[dex] = parseInt(internal);
 });
 
 // Helper: Write Pokedex Flags
@@ -192,6 +198,11 @@ export function createPk1Binary(mon: PokemonStats): Uint8Array {
     return writer.getBuffer();
 }
 
+/**
+ * Reconstructs a full Generation 1 save file from a ParsedSave object.
+ * @param save The modified save data.
+ * @returns The final 32KB binary buffer.
+ */
 export function writeGen1Save(save: ParsedSave): Uint8Array {
     // Clone raw data
     const writer = new BinaryWriter(new Uint8Array(save.rawData));

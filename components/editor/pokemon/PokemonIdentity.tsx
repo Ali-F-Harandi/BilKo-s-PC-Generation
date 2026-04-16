@@ -1,30 +1,31 @@
 
 import React from 'react';
-import { PokemonStats } from '../../../lib/parser/types';
+import { PokemonStats, GameVersion } from '../../../lib/parser/types';
 import { User, Fingerprint } from 'lucide-react';
 import { Autocomplete } from '../../ui/Autocomplete';
 import { TypeBadge } from '../../ui/PokemonBadges';
 import { POKEMON_NAMES } from '../../../lib/data/pokemonNames';
-import { useTheme } from '../../../context/ThemeContext';
+import { useSettings } from '../../../context/SettingsContext';
 import { getPokemonSpriteUrl } from '../../../lib/utils/sprites';
 
 interface PokemonIdentityProps {
     mon: PokemonStats;
     types: string[];
+    version?: GameVersion;
     updateField: (field: keyof PokemonStats, value: any) => void;
     handleSpeciesChange: (name: string) => void;
     handleExpChange: (newExp: number) => void;
 }
 
 export const PokemonIdentityView: React.FC<PokemonIdentityProps> = ({ 
-    mon, types, updateField, handleSpeciesChange, handleExpChange 
+    mon, types, version, updateField, handleSpeciesChange, handleExpChange 
 }) => {
-    const { spriteStyle, activeGameId } = useTheme();
+    const { spriteStyle } = useSettings();
     
     // Safety clamp
     const clamp = (val: number, min: number, max: number) => Math.min(Math.max(val, min), max);
     
-    const spriteUrl = getPokemonSpriteUrl(mon.dexId, spriteStyle, activeGameId || 'red');
+    const spriteUrl = getPokemonSpriteUrl(mon.dexId, spriteStyle, version);
 
     return (
         <div className="flex flex-col gap-6 bg-white dark:bg-gray-900 h-full">
@@ -34,7 +35,7 @@ export const PokemonIdentityView: React.FC<PokemonIdentityProps> = ({
                     <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] opacity-50 rounded-[2rem]"></div>
                     <img 
                         src={spriteUrl} 
-                        className={`w-48 h-48 object-contain drop-shadow-2xl z-10 transition-transform hover:scale-110 duration-500 ${spriteStyle === 'pixel' ? 'pixelated' : ''}`}
+                        className="w-48 h-48 object-contain pixelated drop-shadow-2xl z-10 transition-transform hover:scale-110 duration-500"
                         alt={mon.speciesName}
                         onError={(e) => { (e.target as HTMLImageElement).src = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png' }}
                     />
