@@ -1,106 +1,191 @@
+
 import React, { useState } from 'react';
-import { Menu, X, Home, Grid, Database, Book, Trophy, Map, Settings, Monitor, Gift } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
-import { SettingsModal } from '../ui/SettingsModal';
+import { Menu, Moon, Sun, X, Github, Bug, BookOpen, Monitor, Home, LayoutGrid, Book, Trophy, Map, Database } from 'lucide-react';
+import { DashboardTab } from '../editor/EditorDashboard';
 
-export const Header: React.FC = () => {
-    const { getGameTheme } = useTheme();
-    const gameTheme = getGameTheme();
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+interface HeaderProps {
+    onNavigate?: (tab: DashboardTab) => void;
+    hasActiveSave?: boolean;
+}
 
-    const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+export const Header: React.FC<HeaderProps> = ({ onNavigate, hasActiveSave }) => {
+  const { mode, toggleMode, getGameTheme } = useTheme();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
+  const theme = getGameTheme();
+  const isYellow = theme?.id === 'yellow';
+  
+  // Dynamic Styles
+  const headerStyle = theme ? { backgroundColor: theme.color } : {};
+  const textColor = isYellow ? 'text-gray-900' : 'text-white';
+  const iconColor = isYellow ? 'text-yellow-500' : 'text-red-600';
+  const borderColor = isYellow ? 'border-gray-900' : 'border-gray-800';
+  const hoverBg = isYellow ? 'hover:bg-black/10' : 'hover:bg-white/10';
+  const badgeBg = isYellow ? 'bg-black/10' : 'bg-black/20';
 
-    const menuItems = [
-        { icon: <Home size={20} />, label: 'Dashboard' },
-        { icon: <Grid size={20} />, label: 'PC Storage' },
-        { icon: <Database size={20} />, label: 'Encounter DB' },
-        { icon: <Book size={20} />, label: 'Pokédex' },
-        { icon: <Trophy size={20} />, label: 'Battle Guide' },
-        { icon: <Map size={20} />, label: 'World Events' },
-        { icon: <Trophy size={20} />, label: 'Hall of Fame' },
-    ];
+  const handleNavClick = (tab: DashboardTab) => {
+      if (onNavigate) {
+          onNavigate(tab);
+          setIsMenuOpen(false);
+      }
+  };
 
-    return (
-        <>
-            <header 
-                className="sticky top-0 z-40 w-full backdrop-blur-md bg-white/80 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-800 transition-colors duration-300"
+  return (
+    <>
+      <header 
+        className={`sticky top-0 z-50 w-full shadow-md transition-colors duration-500 ${!theme ? 'bg-red-600 dark:bg-red-900 text-white' : ''} ${textColor}`}
+        style={headerStyle}
+      >
+        <div className="max-w-[100rem] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          {/* Logo Area */}
+          <div className="flex items-center space-x-3 select-none">
+            <div className={`bg-white rounded-full p-1 border-4 ${borderColor}`}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={iconColor}>
+                 <circle cx="12" cy="12" r="10" fill="#F0F0F0" stroke="black" strokeWidth="2"/>
+                 <path d="M2 12H22" stroke="black" strokeWidth="2"/>
+                 <circle cx="12" cy="12" r="3" fill="white" stroke="black" strokeWidth="2"/>
+              </svg>
+            </div>
+            <span className="font-bold text-xl tracking-wider uppercase hidden sm:block">BilKo's PC</span>
+            <span className="font-bold text-xl tracking-wider uppercase sm:hidden">PC</span>
+          </div>
+
+          {/* Actions Area */}
+          <div className="flex items-center space-x-2 sm:space-x-4">
+            
+            <div className={`hidden sm:flex items-center px-3 py-1 rounded text-xs font-mono opacity-80 ${badgeBg}`}>
+              v1.1.0-alpha
+            </div>
+
+            {/* Dark Mode Toggle */}
+            <button 
+              onClick={toggleMode}
+              className={`p-2 rounded-full ${hoverBg} transition-colors`}
+              aria-label="Toggle Theme"
             >
-                <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        <div 
-                            className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-black shadow-lg"
-                            style={{ backgroundColor: gameTheme?.color || '#EF4444' }}
-                        >
-                            PC
-                        </div>
-                        <h1 className="font-black text-xl tracking-tighter italic uppercase text-gray-900 dark:text-white">
-                            Bilko's PC
-                        </h1>
+              {mode === 'light' ? <Moon size={24} /> : <Sun size={24} />}
+            </button>
+
+            <button 
+              onClick={() => setIsMenuOpen(true)}
+              className={`p-2 rounded-full ${hoverBg} transition-colors`}
+              aria-label="Open Menu"
+            >
+              <Menu size={24} />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Hamburger Menu Overlay & Sidebar */}
+      {isMenuOpen && (
+        <div className="fixed inset-0 z-[1000] flex justify-end">
+          {/* Backdrop */}
+          <div 
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300"
+            onClick={() => setIsMenuOpen(false)}
+          ></div>
+
+          {/* Sidebar Drawer */}
+          <div className="relative w-80 h-full bg-white dark:bg-gray-950 shadow-2xl flex flex-col animate-in slide-in-from-right duration-300 border-l border-gray-200 dark:border-gray-800">
+            
+            {/* Drawer Header */}
+            <div className="p-5 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center bg-gray-50 dark:bg-gray-900/50">
+              <span className="font-black text-lg text-gray-800 dark:text-white uppercase tracking-wide">Menu</span>
+              <button 
+                onClick={() => setIsMenuOpen(false)}
+                className="p-1 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-full transition-colors"
+              >
+                <X size={24} />
+              </button>
+            </div>
+
+            {/* Drawer Content */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-6">
+              
+              {/* Navigation Section (Only if Active Save) */}
+              {hasActiveSave && (
+                  <div>
+                    <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 px-2">Navigation</h4>
+                    <div className="space-y-1">
+                      <button onClick={() => handleNavClick('home')} className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors text-gray-700 dark:text-gray-200 font-bold text-sm text-left">
+                        <Home size={18} className="text-orange-500" /> Dashboard
+                      </button>
+                      <button onClick={() => handleNavClick('storage')} className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors text-gray-700 dark:text-gray-200 font-bold text-sm text-left">
+                        <LayoutGrid size={18} className="text-blue-500" /> PC Storage
+                      </button>
+                      <button onClick={() => handleNavClick('encounters')} className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors text-gray-700 dark:text-gray-200 font-bold text-sm text-left">
+                        <Database size={18} className="text-purple-500" /> Encounter DB
+                      </button>
+                      <button onClick={() => handleNavClick('pokedex')} className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors text-gray-700 dark:text-gray-200 font-bold text-sm text-left">
+                        <Book size={18} className="text-red-500" /> Pokédex
+                      </button>
+                      <button onClick={() => handleNavClick('battle')} className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors text-gray-700 dark:text-gray-200 font-bold text-sm text-left">
+                        <Trophy size={18} className="text-green-500" /> Battle Guide
+                      </button>
+                      <button onClick={() => handleNavClick('events')} className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors text-gray-700 dark:text-gray-200 font-bold text-sm text-left">
+                        <Map size={18} className="text-purple-500" /> World Events
+                      </button>
+                      <button onClick={() => handleNavClick('hof')} className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors text-gray-700 dark:text-gray-200 font-bold text-sm text-left">
+                        <Trophy size={18} className="text-yellow-500" /> Hall of Fame
+                      </button>
                     </div>
+                  </div>
+              )}
 
-                    <button 
-                        onClick={toggleMenu}
-                        className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-                    >
-                        <Menu size={24} className="text-gray-700 dark:text-gray-200" />
-                    </button>
+              {/* Section: Links */}
+              <div>
+                <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 px-2">Links</h4>
+                <div className="space-y-1">
+                  <a 
+                    href="https://github.com/BilKoChal/BilKos-PC" 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors text-gray-600 dark:text-gray-300 font-medium text-sm"
+                  >
+                    <Github size={18} />
+                    GitHub Repository
+                  </a>
+                  <a 
+                    href="https://github.com/BilKoChal/BilKos-PC/issues" 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors text-gray-600 dark:text-gray-300 font-medium text-sm"
+                  >
+                    <Bug size={18} />
+                    Report a Bug
+                  </a>
+                  <a 
+                    href="https://bulbapedia.bulbagarden.net/wiki/Main_Page" 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors text-gray-600 dark:text-gray-300 font-medium text-sm"
+                  >
+                    <BookOpen size={18} />
+                    Bulbapedia Wiki
+                  </a>
                 </div>
-            </header>
+              </div>
 
-            {/* Mobile/Sidebar Menu Overlay */}
-            {isMenuOpen && (
-                <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
-                    <div className="absolute right-0 top-0 bottom-0 w-full max-w-xs bg-white dark:bg-gray-900 shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
-                        
-                        {/* Menu Header */}
-                        <div className="p-4 flex items-center justify-between border-b border-gray-100 dark:border-gray-800">
-                            <h2 className="font-black text-xl uppercase tracking-widest text-gray-900 dark:text-white">Menu</h2>
-                            <button 
-                                onClick={toggleMenu}
-                                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
-                            >
-                                <X size={24} className="text-gray-500" />
-                            </button>
-                        </div>
+            </div>
 
-                        {/* Navigation */}
-                        <div className="flex-grow overflow-y-auto p-4 space-y-1">
-                            <div className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 px-2">Navigation</div>
-                            {menuItems.map((item, idx) => (
-                                <button 
-                                    key={idx}
-                                    className="w-full flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-200 font-bold transition-colors text-left"
-                                >
-                                    <span className="text-gray-400 dark:text-gray-500">{item.icon}</span>
-                                    {item.label}
-                                </button>
-                            ))}
-                        </div>
-
-                        {/* Preferences */}
-                        <div className="p-4 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50">
-                            <div className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 px-2">Preferences</div>
-                            <button 
-                                onClick={() => {
-                                    setIsSettingsOpen(true);
-                                    // toggleMenu(); // Keep menu open or close? Screenshot implies settings is a modal on top.
-                                }}
-                                className="w-full flex items-center gap-4 p-3 rounded-xl hover:bg-white dark:hover:bg-gray-800 text-gray-700 dark:text-gray-200 font-bold transition-colors text-left shadow-sm border border-transparent hover:border-gray-200 dark:hover:border-gray-700"
-                            >
-                                <Settings size={20} className="text-gray-400 dark:text-gray-500" />
-                                Settings
-                            </button>
-                        </div>
-                    </div>
+            {/* Drawer Footer */}
+            <div className="p-5 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/30">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center text-red-500">
+                  <Monitor size={20} />
                 </div>
-            )}
+                <div>
+                  <h5 className="font-bold text-gray-900 dark:text-white text-sm">BilKo's PC</h5>
+                  <p className="text-xs text-gray-500">Gen 1 Save Editor</p>
+                </div>
+              </div>
+            </div>
 
-            {/* Settings Modal */}
-            <SettingsModal 
-                isOpen={isSettingsOpen} 
-                onClose={() => setIsSettingsOpen(false)} 
-            />
-        </>
-    );
+          </div>
+        </div>
+      )}
+    </>
+  );
 };

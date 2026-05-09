@@ -3,8 +3,6 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { ParsedSave, GameVersion } from '../../lib/parser/types';
 import { useTheme } from '../../context/ThemeContext';
 import { POKEMON_NAMES } from '../../lib/data/pokemonNames';
-import { useSettings } from '../../context/SettingsContext';
-import { getPokemonSpriteUrl } from '../../lib/utils/sprites';
 import { Check, Eye, Ban, Search, ArrowDownAZ, ArrowUpAZ } from 'lucide-react';
 import { PokemonDetailView } from '../ui/PokemonDetailView';
 
@@ -17,7 +15,6 @@ const MAX_DEX = 151;
 
 export const Pokedex: React.FC<PokedexProps> = ({ data, onUpdate }) => {
     const { getGameTheme } = useTheme();
-    const { spriteStyle } = useSettings();
     const theme = getGameTheme();
     
     // State
@@ -203,7 +200,7 @@ export const Pokedex: React.FC<PokedexProps> = ({ data, onUpdate }) => {
                                     </div>
 
                                     <img 
-                                        src={getPokemonSpriteUrl(id, spriteStyle, detectedVersion)} 
+                                        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`} 
                                         alt={name}
                                         className={`w-16 h-16 object-contain pixelated transition-all duration-300 ${!isSeen && !isOwned ? 'brightness-0 opacity-10' : isSeen && !isOwned ? 'grayscale opacity-60' : 'group-hover:scale-110'}`}
                                         loading="lazy"

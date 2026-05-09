@@ -1,31 +1,27 @@
 
 import React from 'react';
-import { PokemonStats, GameVersion } from '../../../lib/parser/types';
+import { PokemonStats } from '../../../lib/parser/types';
 import { User, Fingerprint } from 'lucide-react';
 import { Autocomplete } from '../../ui/Autocomplete';
 import { TypeBadge } from '../../ui/PokemonBadges';
 import { POKEMON_NAMES } from '../../../lib/data/pokemonNames';
-import { useSettings } from '../../../context/SettingsContext';
-import { getPokemonSpriteUrl } from '../../../lib/utils/sprites';
 
 interface PokemonIdentityProps {
     mon: PokemonStats;
     types: string[];
-    version?: GameVersion;
     updateField: (field: keyof PokemonStats, value: any) => void;
     handleSpeciesChange: (name: string) => void;
     handleExpChange: (newExp: number) => void;
 }
 
 export const PokemonIdentityView: React.FC<PokemonIdentityProps> = ({ 
-    mon, types, version, updateField, handleSpeciesChange, handleExpChange 
+    mon, types, updateField, handleSpeciesChange, handleExpChange 
 }) => {
-    const { spriteStyle } = useSettings();
     
     // Safety clamp
     const clamp = (val: number, min: number, max: number) => Math.min(Math.max(val, min), max);
     
-    const spriteUrl = getPokemonSpriteUrl(mon.dexId, spriteStyle, version);
+    const spriteUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${mon.dexId}.png`;
 
     return (
         <div className="flex flex-col gap-6 bg-white dark:bg-gray-900 h-full">

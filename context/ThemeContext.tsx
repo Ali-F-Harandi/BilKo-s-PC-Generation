@@ -1,79 +1,53 @@
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { SpriteStyle, ThemeContextType } from '../types';
+import { ThemeContextType, ThemeMode, ThemeColor, GameCartridge } from '../types';
+import { pokemonGames } from '../data/games';
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [theme, setTheme] = useState<'light' | 'dark'>('light');
-    const [activeGameId, setActiveGameId] = useState<string | null>(null);
-    const [spriteStyle, setSpriteStyle] = useState<SpriteStyle>('pixel');
+  // Initialize from local storage or default to light
+  const [mode, setMode] = useState<ThemeMode>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('themeMode');
+      return (saved as ThemeMode) || 'light';
+    }
+    return 'light';
+  });
 
-    // Load preferences from local storage
-    useEffect(() => {
-        const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
-        if (savedTheme) setTheme(savedTheme);
-        else if (window.matchMedia('(prefers-color-scheme: dark)').matches) setTheme('dark');
+  const [theme, setTheme] = useState<ThemeColor>('default');
+  const [activeGameId, setActiveGameId] = useState<string | null>(null);
 
-        const savedSpriteStyle = localStorage.getItem('spriteStyle') as SpriteStyle | null;
-        if (savedSpriteStyle) setSpriteStyle(savedSpriteStyle);
+  useEffect(() => {
+    const root = window.document.documentElement;
+    if (mode === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+    localStorage.setItem('themeMode', mode);
+  }, [mode]);
 
-        const savedGameId = localStorage.getItem('activeGameId');
-        if (savedGameId) setActiveGameId(savedGameId);
-    }, []);
+  const toggleMode = () => {
+    setMode((prev) => (prev === 'light' ? 'dark' : 'light'));
+  };
 
-    // Save preferences
-    useEffect(() => {
-        localStorage.setItem('theme', theme);
-        if (theme === 'dark') document.documentElement.classList.add('dark');
-        else document.documentElement.classList.remove('dark');
-    }, [theme]);
+  const getGameTheme = (): GameCartridge | undefined => {
+      if (!activeGameId) return undefined;
+      return pokemonGames.find(g => g.id === activeGameId);
+  };
 
-    useEffect(() => {
-        localStorage.setItem('spriteStyle', spriteStyle);
-    }, [spriteStyle]);
-
-    useEffect(() => {
-        if (activeGameId) localStorage.setItem('activeGameId', activeGameId);
-    }, [activeGameId]);
-
-    const toggleTheme = () => {
-        setTheme(prev => prev === 'light' ? 'dark' : 'light');
-    };
-
-    const getGameTheme = () => {
-        if (activeGameId === 'yellow') return { color: '#FACC15', name: 'Yellow' };
-        if (activeGameId === 'blue') return { color: '#3B82F6', name: 'Blue' };
-        if (activeGameId === 'red') return { color: '#EF4444', name: 'Red' };
-        return { color: '#EF4444', name: 'Red' }; // Default
-    };
-
-    return (
-        <ThemeContext.Provider value={{ 
-            theme, toggleTheme, 
-            activeGameId, setActiveGameId, getGameTheme,
-            spriteStyle, setSpriteStyle 
-        }}>
-            {children}
-        </ThemeContext.Provider>
-    );
+  return (
+    <ThemeContext.Provider value={{ mode, toggleMode, theme, setTheme, activeGameId, setActiveGameId, getGameTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
 };
 
 export const useTheme = () => {
-    const context = useContext(ThemeContext);
-    if (context === undefined) {
-        throw new Error('useTheme must be used within a ThemeProvider');
-    }
-    return context;
+  const context = useContext(ThemeContext);
+  if (context === undefined) {
+    throw new Error('useTheme must be used within a ThemeProvider');
+  }
+  return context;
 };
-
-// Re-export useSettings for backward compatibility - it now uses the same context
-export const useSettings = () => {
-    const context = useContext(ThemeContext);
-    if (context === undefined) {
-        throw new Error('useSettings must be used within a ThemeProvider');
-    }
-    return { spriteStyle: context.spriteStyle, setSpriteStyle: context.setSpriteStyle };
-};
-
-// Re-export SettingsProvider for backward compatibility
-export const SettingsProvider: React.FC<{ children: ReactNode }> = ThemeProvider;

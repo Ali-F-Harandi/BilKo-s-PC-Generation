@@ -1,13 +1,22 @@
-export type GameVersion = 'Red' | 'Blue' | 'Yellow';
 
-export type SpriteStyle = 'pixel' | 'normal' | 'artwork';
+export interface GameCartridge {
+  id: string;
+  name: string;
+  generation: number;
+  color: string;
+  accentColor: string; // Used for stickers/details
+  textColor: string;
+}
+
+export type ThemeMode = 'light' | 'dark';
+export type ThemeColor = 'default' | 'blue' | 'green'; // For future theming extensibility
 
 export interface ThemeContextType {
-    theme: 'light' | 'dark';
-    toggleTheme: () => void;
-    activeGameId: string | null;
-    setActiveGameId: (id: string | null) => void;
-    getGameTheme: () => { color: string; name: string } | undefined;
-    spriteStyle: SpriteStyle;
-    setSpriteStyle: (style: SpriteStyle) => void;
+  mode: ThemeMode;
+  toggleMode: () => void;
+  theme: ThemeColor;
+  setTheme: (theme: ThemeColor) => void;
+  activeGameId: string | null;
+  setActiveGameId: (id: string | null) => void;
+  getGameTheme: () => GameCartridge | undefined;
 }
